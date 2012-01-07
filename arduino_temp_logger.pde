@@ -164,7 +164,8 @@ int logLine(String s) {
 void loop()
 { 
   String timeString = getTime();
-  if (abs(rtc[MINUTE] - lastRunMinute) > 1) { //if there is more than one minute difference between lastRun and current
+  if (abs(rtc[MINUTE] - lastRunMinute) > 1 || lastRunMinute < 0) { //if there is more than one minute difference between lastRun and current
+    Serial.println("Checking");
  
     lastRunMinute = rtc[MINUTE];
     sensors.requestTemperatures();  
@@ -219,14 +220,31 @@ void loop()
     }
 	
     if (tempErrors > 1) {
-        digitalWrite(RED_LED, HIGH);
+        
         Serial.println("Error Temps");
         Serial.println(tempErrors);
         delay(1000);
+        digitalWrite(RED_LED, HIGH);
+        delay(100);
         digitalWrite(RED_LED, LOW);
+        delay(100);
+        digitalWrite(RED_LED, HIGH);
+        delay(100);
+        digitalWrite(RED_LED, LOW);
+        delay(1000);
     }
     digitalWrite(GREEN_LED, LOW);
   }
 
   delay(5000);
+  
+  digitalWrite(GREEN_LED, HIGH);
+  delay(100);
+  digitalWrite(GREEN_LED, LOW);
+  delay(100);
+  digitalWrite(GREEN_LED, HIGH);
+  delay(100);
+  digitalWrite(GREEN_LED, LOW);
+  delay(100);
+
 }
