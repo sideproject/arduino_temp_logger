@@ -36,7 +36,7 @@ DeviceAddress bedroomThermometer = { 0x10, 0x4E, 0xE4, 0x2A, 0x02, 0x08, 0x00, 0
 DeviceAddress livingroomThermometer = { 0x10, 0x2B, 0xDF, 0x2A, 0x02, 0x08, 0x00, 0xD6 };
 
 int rtc[7];
-int compareMinute = -1;
+int lastRunMinute = -1;
 
 #define SECOND 	 0
 #define MINUTE 	 1
@@ -112,28 +112,19 @@ String getTime() {
   return String(year) + "-" + toString(month) + "-" + toString(dayOfMonth) + " " + toString(hour) + ":" + toString(minute) + ":" + toString(second);
 }
 
-String getTemperature(DeviceAddress deviceAddress)
-{
+float getTemperature(DeviceAddress deviceAddress) {
   float tempC = sensors.getTempC(deviceAddress);
-  //if (tempC == -127.00) {
-  //  Serial.print("Error getting temperature");   
-    
-  //char ch[] = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
-  //char *c = ch;
-  //dtostrf(tempC, 10, 4, ch);
-  //while (*c == ' ')
-  //  *c++;
-  //String tempCString = String(c); 
+  return DallasTemperature::toFahrenheit(tempC);
+}
 
-
+String getTemperatureString(float tempF)
+{
   char fh[] = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
   char *f = fh;
-  dtostrf(DallasTemperature::toFahrenheit(tempC), 10, 2, fh);
+  dtostrf(tempF, 10, 2, fh);
   while (*f == ' ')
     *f++;
-  String tempFString = String(f);
-  
-  return tempFString;
+  return String(f);
 }
 
 
@@ -171,19 +162,23 @@ int logLine(String s) {
 //}
 
 void loop()
-{
+{ 
   String timeString = getTime();
-  if (rtc[MINUTE] > compareMinute || rtc[MINUTE] == 0 && compareMinute == 59) {
+  if (abs(rtc[MINUTE] - lastRunMinute) > 1) { //if there is more than one minute difference between lastRun and current
  
-    compareMinute = rtc[MINUTE];
+    lastRunMinute = rtc[MINUTE];
     sensors.requestTemperatures();  
     digitalWrite(GREEN_LED, HIGH);
     
     //Serial.print("Inside temperature1 is: ");
     
-    String tempStringOffice = getTemperature(officeThermometer);
-    String tempStringBedroom = getTemperature(bedroomThermometer);
-    String tempStringLivingroom = getTemperature(livingroomThermometer);
+    float tempOffice = getTemperature(officeThermometer);
+    float tempBedroom = getTemperature(bedroomThermometer);
+    float tempLivingroom = getTemperature(livingroomThermometer);
+    
+    String tempStringOffice = getTemperatureString(tempOffice);
+    String tempStringBedroom = getTemperatureString(tempBedroom);
+    String tempStringLivingroom = getTemperatureString(tempLivingroom);
     
     //String out = timeString + "\t" + tempString "\t" + String(count);
     //count = 0;    
@@ -196,6 +191,14 @@ void loop()
     Serial.print(tempStringBedroom);
     Serial.print("\t");
     Serial.println(tempStringLivingroom);
+
+    int tempErrors = 0;
+    if (tempOffice > 100 || tempOffice < -100)
+      tempErrors++;
+    if (tempBedroom > 100 || tempBedroom < -100)
+      tempErrors++;
+    if (tempLivingroom > 100 || tempLivingroom < -100)
+      tempErrors++;
     
     int logResult = 0;
     logResult += log(timeString + "\t");
@@ -207,10 +210,18 @@ void loop()
     logResult += logLine(tempStringLivingroom);
     delay(300);
     
-    if (logResult != 0) {
+    if (logResult > 0) {
         digitalWrite(RED_LED, HIGH);
         Serial.println("Error Logging");
         Serial.println(logResult);
+        delay(1000);
+        digitalWrite(RED_LED, LOW);
+    }
+	
+    if (tempErrors > 1) {
+        digitalWrite(RED_LED, HIGH);
+        Serial.println("Error Temps");
+        Serial.println(tempErrors);
         delay(1000);
         digitalWrite(RED_LED, LOW);
     }
