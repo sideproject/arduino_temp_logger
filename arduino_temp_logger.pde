@@ -76,7 +76,7 @@ void setup()
   //digitalWrite(PIN_ANEMOMETER, HIGH);
   //attachInterrupt(0, countAnemometer, FALLING);
 
-/*
+  /*
   //to set clock
   RTC.stop();
 
@@ -91,7 +91,7 @@ void setup()
   RTC.set(DS1307_SEC, 0);
   
   RTC.start();
-*/
+  */
   
   //log("DateTime\tF");
   
@@ -122,62 +122,62 @@ String getTime() {
   //char value2[4] ; 
   //itoa (value1, value2, 10);
   
-   char cYear[5]="";
-   itoa(year, cYear,10);
-   char cMonth[3]="";
-   itoa(month, cMonth,10);
-   char cDay[3]="";
-   itoa(dayOfMonth, cDay,10); 
-   char cHour[3]="";
-   itoa(hour, cHour,10);
-   char cMinute[3]="";
-   itoa(minute, cMinute,10);
-   char cSecond[3]="";
-   itoa(second, cSecond,10);
+  char cYear[5]="";
+  itoa(year, cYear,10);
+  char cMonth[3]="";
+  itoa(month, cMonth,10);
+  char cDay[3]="";
+  itoa(dayOfMonth, cDay,10); 
+  char cHour[3]="";
+  itoa(hour, cHour,10);
+  char cMinute[3]="";
+  itoa(minute, cMinute,10);
+  char cSecond[3]="";
+  itoa(second, cSecond,10);
    
-   if (month < 10) {
-     cMonth[1] = cMonth[0];
-     cMonth[0] = '0';
-   }
-   if (dayOfMonth < 10) {
-     cDay[1] = cDay[0];
-     cDay[0] = '0';
-   }
-   if (hour < 10) {
-     cHour[1] = cHour[0];
-     cHour[0] = '0';
-   }
-   if (minute < 10) {
-     cMinute[1] = cMinute[0];
-     cMinute[0] = '0';
-   }
-   if (second < 10) {
-     cSecond[1] = cSecond[0];
-     cSecond[0] = '0';
-   }
-   char returner[25] = "yyyy-mm-dd hh:mm:ss";
-   returner[0] = cYear[0];
-   returner[1] = cYear[1];
-   returner[2] = cYear[2];
-   returner[3] = cYear[3];
-   returner[4] = '-';
-   returner[5] = cMonth[0];
-   returner[6] = cMonth[1];
-   returner[7] = '-';
-   returner[8] = cDay[0];
-   returner[9] = cDay[1];
-   returner[10]= ' ';
-   returner[11]= cHour[0];
-   returner[12]= cHour[1];
-   returner[13]= ':';
-   returner[14]= cMinute[0];
-   returner[15]= cMinute[1];
-   returner[16]= ':';
-   returner[17]= cSecond[0];
-   returner[18]= cSecond[1];
-   returner[19]= '\0';
-//   Serial.println(returner);   
-   return String(returner);
+  if (month < 10) {
+    cMonth[1] = cMonth[0];
+    cMonth[0] = '0';
+  }
+  if (dayOfMonth < 10) {
+    cDay[1] = cDay[0];
+    cDay[0] = '0';
+  }
+  if (hour < 10) {
+    cHour[1] = cHour[0];
+    cHour[0] = '0';
+  }
+  if (minute < 10) {
+    cMinute[1] = cMinute[0];
+    cMinute[0] = '0';
+  }
+  if (second < 10) {
+    cSecond[1] = cSecond[0];
+    cSecond[0] = '0';
+  }
+  char returner[25] = "yyyy-mm-dd hh:mm:ss";
+  returner[0] = cYear[0];
+  returner[1] = cYear[1];
+  returner[2] = cYear[2];
+  returner[3] = cYear[3];
+  returner[4] = '-';
+  returner[5] = cMonth[0];
+  returner[6] = cMonth[1];
+  returner[7] = '-';
+  returner[8] = cDay[0];
+  returner[9] = cDay[1];
+  returner[10]= ' ';
+  returner[11]= cHour[0];
+  returner[12]= cHour[1];
+  returner[13]= ':';
+  returner[14]= cMinute[0];
+  returner[15]= cMinute[1];
+  returner[16]= ':';
+  returner[17]= cSecond[0];
+  returner[18]= cSecond[1];
+  returner[19]= '\0';
+  //   Serial.println(returner);   
+  return String(returner);
    
   //return String(year) + "-" + toString(month);// + "-" + toString(dayOfMonth) + " " + toString(hour) + ":" + toString(minute) + ":" + toString(second);
 }
@@ -198,17 +198,17 @@ String getTemperatureString(float tempF)
 }
 
 /*
-int log(String s) {
+  int log(String s) {
   byte buffer[100];
   int i = 0;
   for (i = 0; i < 100; i++) {
-    buffer[i] = '\0';
+  buffer[i] = '\0';
   }
   for (i = 0; i < s.length() && i < 99; i++) {
-    buffer[i] = s.charAt(i);
+  buffer[i] = s.charAt(i);
   }
   return FileLogger::append("data.txt", buffer, i);
-}*/
+  }*/
 
 int logLine(String s) {
   Serial.println("Logging: " + s);
@@ -231,7 +231,7 @@ int logLine(String s) {
 //}
 
 void blink(int pin, int ms) {
- digitalWrite(pin, HIGH);
+  digitalWrite(pin, HIGH);
   delay(ms);
   digitalWrite(pin, LOW);
   delay(ms);
@@ -240,7 +240,7 @@ void blink(int pin, int ms) {
 
 void loop()
 {
- //Serial.println("LOOP-START");
+  //Serial.println("LOOP-START");
   String timeString = getTime() + "\t";
   //Serial.println(timeString);
   //Serial.println("TT");
@@ -282,32 +282,32 @@ void loop()
     logResult += logLine(x);
     //logResult += logLine("ABC");
     /*logResult += log(timeString);
-    delay(400);
-    logResult += log(tempStringOffice);
-    delay(400);
-    logResult += log(tempStringBedroom);
-    delay(400);
-    logResult += logLine(tempStringLivingroom);
-    delay(400);*/
+      delay(400);
+      logResult += log(tempStringOffice);
+      delay(400);
+      logResult += log(tempStringBedroom);
+      delay(400);
+      logResult += logLine(tempStringLivingroom);
+      delay(400);*/
     //Serial.println("AFTERLOG");
 
     if (logResult > 0) {
-        lastRunIsError = 1;
-        digitalWrite(RED_LED, HIGH);
-        Serial.println("Error Logging");
-        Serial.println(logResult);
-        delay(1000);
-        digitalWrite(RED_LED, LOW);
+      lastRunIsError = 1;
+      digitalWrite(RED_LED, HIGH);
+      Serial.println("Error Logging");
+      Serial.println(logResult);
+      delay(1000);
+      digitalWrite(RED_LED, LOW);
     }
 	
     if (tempErrors > 1) {
-        lastRunIsError = 1;
-        Serial.println("Error Temps");
-        Serial.println(tempErrors);
-        delay(1000);
-        blink(RED_LED, 100);
-        blink(RED_LED, 100);
-        delay(1000);
+      lastRunIsError = 1;
+      Serial.println("Error Temps");
+      Serial.println(tempErrors);
+      delay(1000);
+      blink(RED_LED, 100);
+      blink(RED_LED, 100);
+      delay(1000);
     }
   }
 
@@ -318,8 +318,9 @@ void loop()
   if (lastRunIsError)
     blink(RED_LED, 100);
   
- blink(GREEN_LED, 100);
- if (lastRunIsError)
-  blink(RED_LED, 100);
- // Serial.println("LOOP-END");
+  blink(GREEN_LED, 100);
+  if (lastRunIsError)
+    blink(RED_LED, 100);
+  // Serial.println("LOOP-END");
 }
+
